@@ -3,7 +3,7 @@ import sqlalchemy
 
 import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy import Column, Integer, String, DateTime, Float, PickleType
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -38,6 +38,7 @@ class CarPlate(Base):
     vehicle_year_confidence = Column(Float)
     vehicle_year = Column(String(20))
     vehicle_year_confidence = Column(Float)
+    plate_crop = Column(PickleType)
 
 
 def setup(hass, config):
@@ -55,8 +56,9 @@ def setup(hass, config):
                 timestamp=datetime.datetime.fromtimestamp(data["epoch_start"] / 1000),
                 camera_id=data["camera_id"],
                 image_id=data["best_uuid"],
-                plate=data["best_plate_number"],
-                plate_confidence=data["best_confidence"],
+                plate=data["best_plate"]["plate"],
+                plate_confidence=data["best_plate"]["confidence"],
+                plate_crop=data["best_plate"]["coordinates"],
                 vehicle_color=data["vehicle"]["color"][0]["name"],
                 vehicle_color_confidence=data["vehicle"]["color"][0]["confidence"],
                 vehicle_make=data["vehicle"]["make"][0]["name"],
