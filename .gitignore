@@ -133,3 +133,4 @@ tmp_cache
 
 # python-language-server / Rope
 .ropeproject
+config/custom_components/openalpr_scout_service/sample
