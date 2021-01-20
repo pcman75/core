@@ -39,6 +39,7 @@ class CarPlate(Base):
     vehicle_year = Column(String(20))
     vehicle_year_confidence = Column(Float)
     plate_crop = Column(PickleType)
+    vehicle_crop = Column(PickleType)
 
 
 def setup(hass, config):
@@ -53,7 +54,9 @@ def setup(hass, config):
         try:
             sess = sessmaker()
             plate = CarPlate(
-                timestamp=datetime.datetime.fromtimestamp(data["epoch_start"] / 1000),
+                timestamp=datetime.datetime.fromtimestamp(
+                    int(data["epoch_start"]) / 1000
+                ),
                 camera_id=data["camera_id"],
                 image_id=data["best_uuid"],
                 plate=data["best_plate"]["plate"],
@@ -61,6 +64,7 @@ def setup(hass, config):
                 plate_crop=data["best_plate"]["coordinates"],
                 vehicle_color=data["vehicle"]["color"][0]["name"],
                 vehicle_color_confidence=data["vehicle"]["color"][0]["confidence"],
+                vehicle_crop=data["best_plate"]["vehicle_region"],
                 vehicle_make=data["vehicle"]["make"][0]["name"],
                 vehicle_make_confidence=data["vehicle"]["make"][0]["confidence"],
                 vehicle_make_model=data["vehicle"]["make_model"][0]["name"],
